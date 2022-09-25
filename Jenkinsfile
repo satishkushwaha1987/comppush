@@ -89,6 +89,7 @@ pipeline {
                 }
             }
         }
+}
     //     stages {
     //         stage('Git checkout') {
     //            steps{
