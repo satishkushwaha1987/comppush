@@ -12,11 +12,11 @@ pipeline {
         }
             stage('TF State'){
                 steps{
-                    // script{
-                    //     def props = readProperties file: '.sandbox'
-                    //     props.each { key, value ->
-                    //         env."$key"="$value"
-                    //     }
+                    script{
+                        def props = readProperties file: '.sandbox'
+                        props.each { key, value ->
+                            env."$key"="$value"
+                        }
 
                         env.PROFILE="${APP_NAME}-${DEPLOYMENT_ENVIRONMENT}"
                         env.PROFILE_STATEMENT = "--profile ${PROFILE}"
