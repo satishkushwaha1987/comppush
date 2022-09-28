@@ -4,7 +4,7 @@ pipeline {
             stage('Install TF'){
                 steps{
                     script{
-                   """
+                    sh """
                         ${env.TERRAFORM_HOME}/terraform -v
                     """
                 }
@@ -24,7 +24,7 @@ pipeline {
                         env.STATE_BUCKET_KEY="${APP_NAME}-${DEPLOYMENT_ENVIRONMENT}.tfstate"
 
                         withAWS(credentials:"${PROFILE}") {
-                         '''
+                            sh '''
                                 if aws s3 ls "s3://${STATE_BUCKET}" 2>&1 | grep -q "NoSuchBucket"
                                 then
                                 aws s3api create-bucket --bucket ${STATE_BUCKET} --region ${AWS_REGION}
@@ -36,7 +36,7 @@ pipeline {
                         }
 
                         withAWS(credentials:"${PROFILE}") {
-                         '''
+                            sh '''
                                 LOCKED=$(aws s3 ls s3://${STATE_BUCKET} | grep ${STATE_BUCKET_KEY}.lock | wc -l | xargs)
                                 echo "$LOCKED" > "is_locked.txt"
                                 if [ "$LOCKED" != "0" ] ; then
@@ -55,7 +55,7 @@ pipeline {
                             error('Someone else is terraforming this environment. Stopping.')
                         }
 
-                     'rm is_locked.txt'
+                        sh 'rm is_locked.txt'
                     }
                 }
             }
@@ -70,10 +70,10 @@ pipeline {
                         env.STATE_BUCKET="${APP_NAME}-${DEPLOYMENT_ENVIRONMENT}-tfstate"
                         env.STATE_BUCKET_KEY="${APP_NAME}-${DEPLOYMENT_ENVIRONMENT}.tfstate"
                         
-                        "cp ./variables/${DEPLOYMENT_ENVIRONMENT}/*_override.tf ."
+                        sh "cp ./variables/${DEPLOYMENT_ENVIRONMENT}/*_override.tf ."
 
                         withAWS(credentials:"${PROFILE}") {
-                            '''
+                            sh '''
                                 aws s3 rm s3://${STATE_BUCKET}/${STATE_BUCKET_KEY}.lock
                                 
                                 echo no | ${TERRAFORM_HOME}/terraform init -backend=true -input=true \
