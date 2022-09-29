@@ -1,15 +1,15 @@
 pipeline {
     agent any
         stages{
-            stage('Install TF'){
-                steps{
-                    script{
-                    sh """
-                        ${env.TERRAFORM_HOME}/terraform -v
-                    """
-                }
-            }
-        }
+        //     stage('Install TF'){
+        //         steps{
+        //             script{
+        //             sh """
+        //                 ${env.TERRAFORM_HOME}/terraform -v
+        //             """
+        //         }
+        //     }
+        // }
             stage('TF State'){
                 steps{
                     script{
