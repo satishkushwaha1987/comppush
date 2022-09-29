@@ -1,9 +1,15 @@
 pipeline {
     agent any
-        environment {
-        AWS_ACCESS_KEY_ID     = credentials('')
-        AWS_SECRET_ACCESS_KEY = credentials('')
-        TF_IN_AUTOMATION      = '1'
+
+    CREDENTIALS=`aws sts assume-role --role-arn arn:aws:iam::097411041090:role/test-assume-role --role-session-name IAC-test`
+    export AWS_SECRET_ACCESS_KEY=`echo $CREDENTIALS | jq -r '.Credentials.SecretAccessKey'`
+    export AWS_SESSION_TOKEN=`echo $CREDENTIALS | jq -r '.Credentials.SessionToken'`
+    export AWS_ACCESS_KEY_ID=`echo $CREDENTIALS | jq -r '.Credentials.AccessKeyId'`
+    export AWS_REGION=us-east-2
+     environment {
+        // AWS_ACCESS_KEY_ID     = credentials('')
+        // AWS_SECRET_ACCESS_KEY = credentials('')
+        // TF_IN_AUTOMATION      = '1'
         APP_NAME              = 'IACtest'
         DEPLOYMENT_ENVIRONMENT = 'sandbox'
     }
@@ -17,19 +23,19 @@ pipeline {
         //         }
         
             stage('TF State'){
-                steps{
-                    script{
-                        def props = readProperties file: '.sandbox'
-                        props.each { key, value ->
-                            env."$key"="$value"
-                        }
+                // steps{
+                    // script{
+                    //     def props = readProperties file: '.sandbox'
+                    //     props.each { key, value ->
+                    //         env."$key"="$value"
+                    //     }
 
                         env.PROFILE="${APP_NAME}-${DEPLOYMENT_ENVIRONMENT}"
                         env.PROFILE_STATEMENT = "--profile ${PROFILE}"
                         env.STATE_BUCKET="${APP_NAME}-${DEPLOYMENT_ENVIRONMENT}-tfstate"
                         env.STATE_BUCKET_KEY="${APP_NAME}-${DEPLOYMENT_ENVIRONMENT}.tfstate"
 
-                        withAWS(credentials:"${PROFILE}") {
+                        withAWS(credentials:"${CREDENTIALS}") {
                             sh '''
                                 if aws s3 ls "s3://${STATE_BUCKET}" 2>&1 | grep -q "NoSuchBucket"
                                 then
@@ -41,7 +47,7 @@ pipeline {
                             '''
                         }
 
-                        withAWS(credentials:"${PROFILE}") {
+                        withAWS(credentials:"${CREDENTIALS}") {
                             sh '''
                                 LOCKED=$(aws s3 ls s3://${STATE_BUCKET} | grep ${STATE_BUCKET_KEY}.lock | wc -l | xargs)
                                 echo "$LOCKED" > "is_locked.txt"
@@ -103,5 +109,4 @@ pipeline {
                     }
                 }
             }
-    }
-}
+    
