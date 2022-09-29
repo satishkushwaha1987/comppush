@@ -12,7 +12,6 @@ pipeline {
         // TF_IN_AUTOMATION      = '1'
         APP_NAME              = 'IACtest'
         DEPLOYMENT_ENVIRONMENT = 'sandbox'
-        CREDENTIALS=`aws sts assume-role --role-arn arn:aws:iam::097411041090:role/test-assume-role --role-session-name IAC-test`
     }
         stages{
         //     stage('Install TF'){
