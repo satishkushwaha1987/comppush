@@ -1,6 +1,13 @@
 pipeline {
     agent any
-        stages{
+
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('AKIARNLRGQ5BNU5LU6WX')
+        AWS_SECRET_ACCESS_KEY = credentials('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')
+        TF_IN_AUTOMATION      = '1'
+        
+    }
+        // stages{
         //     stage('Install TF'){
         //         steps{
         //             script{
@@ -8,8 +15,8 @@ pipeline {
         //                 ${env.TERRAFORM_HOME}/terraform -v
         //             """
         //         }
-        //     }
-        // }
+            }
+        }
             stage('TF State'){
                 steps{
                     script{
