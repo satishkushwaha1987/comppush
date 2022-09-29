@@ -1,17 +1,18 @@
 pipeline {
     agent any
 
-    CREDENTIALS=`aws sts assume-role --role-arn arn:aws:iam::097411041090:role/test-assume-role --role-session-name IAC-test`
-    export AWS_SECRET_ACCESS_KEY=`echo $CREDENTIALS | jq -r '.Credentials.SecretAccessKey'`
-    export AWS_SESSION_TOKEN=`echo $CREDENTIALS | jq -r '.Credentials.SessionToken'`
-    export AWS_ACCESS_KEY_ID=`echo $CREDENTIALS | jq -r '.Credentials.AccessKeyId'`
-    export AWS_REGION=us-east-2
+    
+    // export AWS_SECRET_ACCESS_KEY=`echo $CREDENTIALS | jq -r '.Credentials.SecretAccessKey'`
+    // export AWS_SESSION_TOKEN=`echo $CREDENTIALS | jq -r '.Credentials.SessionToken'`
+    // export AWS_ACCESS_KEY_ID=`echo $CREDENTIALS | jq -r '.Credentials.AccessKeyId'`
+    // export AWS_REGION=us-east-2
      environment {
         // AWS_ACCESS_KEY_ID     = credentials('')
         // AWS_SECRET_ACCESS_KEY = credentials('')
         // TF_IN_AUTOMATION      = '1'
         APP_NAME              = 'IACtest'
         DEPLOYMENT_ENVIRONMENT = 'sandbox'
+        CREDENTIALS=`aws sts assume-role --role-arn arn:aws:iam::097411041090:role/test-assume-role --role-session-name IAC-test`
     }
         stages{
         //     stage('Install TF'){
