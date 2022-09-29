@@ -1,7 +1,6 @@
 pipeline {
     agent any
-
-    environment {
+        environment {
         AWS_ACCESS_KEY_ID     = credentials('')
         AWS_SECRET_ACCESS_KEY = credentials('')
         TF_IN_AUTOMATION      = '1'
@@ -16,7 +15,6 @@ pipeline {
         //                 ${env.TERRAFORM_HOME}/terraform -v
         //             """
         //         }
-            }
         
             stage('TF State'){
                 steps{
@@ -105,4 +103,4 @@ pipeline {
                     }
                 }
             }
-        
+}
