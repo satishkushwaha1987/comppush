@@ -7,7 +7,7 @@ pipeline {
         APP_NAME              = 'IACtest'
         DEPLOYMENT_ENVIRONMENT = 'sandbox'
     }
-        // stages{
+        stages{
         //     stage('Install TF'){
         //         steps{
         //             script{
@@ -103,4 +103,5 @@ pipeline {
                     }
                 }
             }
+    }
 }
