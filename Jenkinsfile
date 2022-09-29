@@ -17,7 +17,7 @@ pipeline {
         //             """
         //         }
             }
-        }
+        
             stage('TF State'){
                 steps{
                     script{
@@ -105,5 +105,4 @@ pipeline {
                     }
                 }
             }
-        }
-}
+        
